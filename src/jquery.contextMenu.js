@@ -503,13 +503,24 @@ var // currently active contextMenu trigger
                     if (opt.isInput || !opt.$selected || !opt.$selected.length) {
                         break;
                     }
-                
-                    if (!opt.$selected.parent().hasClass('context-menu-root')) {
-                        var $parent = opt.$selected.parent().parent();
-                        opt.$selected.trigger('contextmenu:blur');
-                        opt.$selected = $parent;
-                        return;
-                    }
+					
+					if(opt.rtl){
+						var itemdata = opt.$selected.data('contextMenu') || {};
+						if (itemdata.$menu && opt.$selected.hasClass('context-menu-submenu')) {
+							opt.$selected = null;
+							itemdata.$selected = null;
+							itemdata.$menu.trigger('nextcommand');
+							return;
+						}
+					}
+					else{
+						if (!opt.$selected.parent().hasClass('context-menu-root')) {
+							var $parent = opt.$selected.parent().parent();
+							opt.$selected.trigger('contextmenu:blur');
+							opt.$selected = $parent;
+							return;
+						}
+					}
                     break;
                     
                 case 39: // right
@@ -518,13 +529,23 @@ var // currently active contextMenu trigger
                         break;
                     }
                     
-                    var itemdata = opt.$selected.data('contextMenu') || {};
-                    if (itemdata.$menu && opt.$selected.hasClass('context-menu-submenu')) {
-                        opt.$selected = null;
-                        itemdata.$selected = null;
-                        itemdata.$menu.trigger('nextcommand');
-                        return;
-                    }
+					if(opt.rtl){
+						if (!opt.$selected.parent().hasClass('context-menu-root')) {
+							var $parent = opt.$selected.parent().parent();
+							opt.$selected.trigger('contextmenu:blur');
+							opt.$selected = $parent;
+							return;
+						}
+					}
+					else{
+						var itemdata = opt.$selected.data('contextMenu') || {};
+						if (itemdata.$menu && opt.$selected.hasClass('context-menu-submenu')) {
+							opt.$selected = null;
+							itemdata.$selected = null;
+							itemdata.$menu.trigger('nextcommand');
+							return;
+						}
+					}
                     break;
                 
                 case 35: // end
