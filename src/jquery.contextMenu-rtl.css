@@ -1,0 +1,44 @@
+/*!
+ * jQuery contextMenu - Plugin for simple contextMenu handling
+ * RTL Overrides
+ * Version: git-rtl
+ *
+ * Authors: Rodney Rehm, Addy Osmani (patches for FF)
+ * Web: http://medialize.github.com/jQuery-contextMenu/
+ *
+ * RTLed by: Layal Khatib 
+ *
+ * Licensed under
+ *   MIT License http://www.opensource.org/licenses/mit-license
+ *   GPL v3 http://opensource.org/licenses/GPL-3.0
+ *
+ */
+
+.context-menu-list {
+    direction:rtl;
+}
+
+.context-menu-item {
+    padding: 2px 24px 2px 2px;
+}
+
+.context-menu-submenu:after {
+    right:auto;left: 3px;
+}
+
+.context-menu-item.icon { background-position: 98% 2px;background-position: right 4px top 2px; }
+
+/* position checkboxes and radios as icons */
+.context-menu-input > label > input[type="checkbox"],
+.context-menu-input > label > input[type="radio"] {
+    margin-left: 0; margin-right: -17px;
+}
+.context-menu-input > label > span {
+    margin-left: 0; margin-right: 5px;
+}
+
+.context-menu-item > .context-menu-list {
+   /* re-positioned by js */
+    right: auto; left: -5px;
+}
+

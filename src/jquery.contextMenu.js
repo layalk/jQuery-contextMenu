@@ -105,7 +105,10 @@ var // currently active contextMenu trigger
                 // determine contextMenu position
                 var offset = this.offset();
                 offset.top += this.outerHeight();
-                offset.left += this.outerWidth() / 2 - $menu.outerWidth() / 2;
+                if(opt.rtl)
+					offset.left += this.outerWidth() / 2 - $menu.outerWidth() / 2 +opt.$menu.width();
+				else
+					offset.left += this.outerWidth() / 2 - $menu.outerWidth() / 2;
                 $menu.css(offset);
             }
         },
@@ -122,7 +125,10 @@ var // currently active contextMenu trigger
                 offset = opt.$menu.position();
             } else {
                 // x and y are given (by mouse event)
-                offset = {top: y, left: x};
+                if(opt.rtl)
+				offset = {top: y, left: x-opt.$menu.width()};
+				else
+				offset = {top: y, left: x};
             }
             
             // correct offset if viewport demands it
@@ -139,17 +145,30 @@ var // currently active contextMenu trigger
                 offset.top = 0;
             }
             
-            if (offset.left + width > right) {
+            if(opt.rtl)
+			if (offset.left<= 0) {
+                offset.left += width;
+            }
+			else
+			if (offset.left + width > right) {
                 offset.left -= width;
             }
             
             opt.$menu.css(offset);
         },
         // position the sub-menu
-        positionSubmenu: function($menu) {
+        positionSubmenu: function($menu,rtl) {
             if ($.ui && $.ui.position) {
                 // .position() is provided as a jQuery UI utility
                 // (...and it won't work on hidden elements)
+				if(rtl)
+				$menu.css('display', 'block').position({
+                    my: "right top",
+                    at: "left top",
+                    of: this,
+                    collision: "flipfit fit"
+                }).css('display', '');
+				else
                 $menu.css('display', 'block').position({
                     my: "left top",
                     at: "right top",
@@ -158,6 +177,12 @@ var // currently active contextMenu trigger
                 }).css('display', '');
             } else {
                 // determine contextMenu position
+				if(rtl)
+				var offset = {
+                    top: 0,
+                    right: this.outerWidth()
+                };
+				else
                 var offset = {
                     top: 0,
                     left: this.outerWidth()
@@ -181,7 +206,10 @@ var // currently active contextMenu trigger
         // default callback
         callback: null,
         // list of contextMenu items
-        items: {}
+        items: {},
+		
+		//RTL Mode
+		rtl:false,
     },
     // mouse position for hover activation
     hoveract = {
@@ -778,7 +806,7 @@ var // currently active contextMenu trigger
             
             // position sub-menu - do after show so dumb $.ui.position can keep up
             if (opt.$node) {
-                root.positionSubmenu.call(opt.$node, opt.$menu);
+                root.positionSubmenu.call(opt.$node, opt.$menu,root.rtl);
             }
         },
         // blur <command>
